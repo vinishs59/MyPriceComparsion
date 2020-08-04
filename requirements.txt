@@ -1,0 +1,8 @@
+selectorlib
+requests
+streamlit
+pandas
+streamlit_theme
+json
+json2html
+time
