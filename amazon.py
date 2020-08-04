@@ -76,7 +76,7 @@ if key:
 
     data = scrape(amazon_url,'amazon')
     #amazon_df
-    prod = data['Products']
+    
     if data['Products'] is not None:
             #json.dump(data,outfile)
             #outfile.write("\n")s
