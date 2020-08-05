@@ -9,7 +9,7 @@ import pandas as pd
 import streamlit_theme as stt
 
 stt.set_theme({'primary': '#1b3388'})
-st.title('My themed app')
+st.title('Smart Price app')
 
 
 # Create an Extractor by reading from the YAML file
@@ -43,14 +43,15 @@ def scrape(url,str):
         return None
     # Pass the HTML of the page and create
     if str == 'amazon':
-         return amazon_ext.extract(r.text)
+        #st.subheader('Amazon available Price')
+        return amazon_ext.extract(r.text)
     if str == 'flipkart':
-         ret = e.extract(r.text)
-         if (ret['Products']) is not None:
-             return e.extract(r.text)
-         else:
-             ext =Extractor.from_yaml_file('flipkartNew.yml')
-             return ext.extract(r.text)
+        ret = e.extract(r.text)
+        if (ret['Products']) is not None:
+            return e.extract(r.text)
+        else:
+            ext =Extractor.from_yaml_file('flipkartNew.yml')
+            return ext.extract(r.text)
 
 
 st.sidebar.header('Price to compare')
@@ -67,11 +68,13 @@ def make_clickable(link):
     return f'<a target="_blank" href="{link}">{text}</a>'
 
 if key:
-    fp_df = pd.DataFrame()
+    #fp_df = pd.DataFrame()
     df = pd.DataFrame()
     if select_url == 'Amazon':
+        #st.subheader('Amazon available Price')
         amazon_url= 'https://www.amazon.in/s?k='+str(key)
         data = scrape(amazon_url,'amazon')
+        print(data)
         #amazon_df
         if data['Products'] is not None:
             df = pd.json_normalize(data['Products'])
@@ -85,15 +88,15 @@ if key:
         fdata = scrape(flipkat_url,'flipkart')
 
         if fdata['Products'] is not None:
-            fp_df = pd.json_normalize(fdata['Products'])
-            fp_df = fp_df.iloc[:10]
+            df = pd.json_normalize(fdata['Products'])
+            df = df.iloc[:10]
             #fp_df = fp_df.iloc[:10]
             link = "https://www.flipkart.com"
-            fp_df['url'] = link+fp_df['url'].astype(str)
-            fp_df['url'] = fp_df['url'].apply(make_clickable)
+            df['url'] = link+df['url'].astype(str)
+            df['url'] = df['url'].apply(make_clickable)
 
-    st.subheader('rates')
-    frames= [df,fp_df]
-    df_keys = pd.concat([df,fp_df], keys=['Amazon','Flipkart'])
-    df_keys = df_keys.to_html(escape = False)
-    st.write(df_keys, unsafe_allow_html=True)
+    st.subheader('Latest available Price')
+    #frames= [df,fp_df]
+    #df_keys = pd.concat([df,fp_df], keys=['Amazon','Flipkart'])
+    df = df.to_html(escape = False)
+    st.write(df, unsafe_allow_html=True)
