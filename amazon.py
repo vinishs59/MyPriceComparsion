@@ -33,7 +33,6 @@ def scrape(url,str):
     }
 
     # Download the page using requests
-    st.write('Downloading')
     r = requests.get(url, headers=headers)
     # Simple check to check if page was blocked (Usually 503)
     if r.status_code > 500:
@@ -44,7 +43,6 @@ def scrape(url,str):
         return None
     # Pass the HTML of the page and create
     if str == 'amazon':
-         st.write("Extracting")
          return amazon_ext.extract(r.text)
     if str == 'flipkart':
          ret = e.extract(r.text)
@@ -60,48 +58,42 @@ key = ""
 key = st.sidebar.text_input('Enter the product')
 st.write('the selected product is', key)
 
-if key:
-    amazon_url= 'https://www.amazon.in/s?k='+str(key)
-    flipkat_url = 'https://www.flipkart.com/search?q='+ str(key)
+select_url = st.sidebar.selectbox("Choose your preference: ",['Amazon','Flipkart'])
 
-    # product_data = []
-    #with open("urls.txt",'r') as urllist, open('output.jsonl','w') as outfile:
-    #    for url in urllist.read().splitlines():
-    #print("url is %s\n"%amazon_url)
-    def make_clickable(link):
+def make_clickable(link):
         # target _blank to open new window
         # extract clickable text to display for your link
-        text = link.split('=')[1]
-        return f'<a target="_blank" href="{link}">{text}</a>'
+    text = link.split('=')[1]
+    return f'<a target="_blank" href="{link}">{text}</a>'
 
-    data = scrape(amazon_url,'amazon')
-    #amazon_df
-    
-    if data['Products'] is not None:
-
-        df = pd.json_normalize(data['Products'])
-        df = df.iloc[:10]
-        amazonlink = "https://www.amazon.in"
-        df['url'] = amazonlink+df['url'].astype(str)
-        df['url'] = df['url'].apply(make_clickable)
-
-
-    fdata = scrape(flipkat_url,'flipkart')
+if key:
     fp_df = pd.DataFrame()
-    if fdata['Products'] is not None:
+    df = pd.DataFrame()
+    if select_url == 'Amazon':
+        amazon_url= 'https://www.amazon.in/s?k='+str(key)
+        data = scrape(amazon_url,'amazon')
+        #amazon_df
+        if data['Products'] is not None:
+            df = pd.json_normalize(data['Products'])
+            df = df.iloc[:10]
+            amazonlink = "https://www.amazon.in"
+            df['url'] = amazonlink+df['url'].astype(str)
+            df['url'] = df['url'].apply(make_clickable)
 
-        fp_df = pd.json_normalize(fdata['Products'])
-        fp_df = fp_df.iloc[:10]
-        #fp_df = fp_df.iloc[:10]
-        link = "https://www.flipkart.com"
-        fp_df['url'] = link+fp_df['url'].astype(str)
-        fp_df['url'] = fp_df['url'].apply(make_clickable)
-        #fp_df = fp_df.to_html(escape=False)
+    if select_url == 'Flipkart':
+        flipkat_url = 'https://www.flipkart.com/search?q='+ str(key)
+        fdata = scrape(flipkat_url,'flipkart')
 
-        #df.style.set_properties(subset=['url'], **{'width': '300px'})
-    st.subheader('flipkart rates')
+        if fdata['Products'] is not None:
+            fp_df = pd.json_normalize(fdata['Products'])
+            fp_df = fp_df.iloc[:10]
+            #fp_df = fp_df.iloc[:10]
+            link = "https://www.flipkart.com"
+            fp_df['url'] = link+fp_df['url'].astype(str)
+            fp_df['url'] = fp_df['url'].apply(make_clickable)
+
+    st.subheader('rates')
     frames= [df,fp_df]
     df_keys = pd.concat([df,fp_df], keys=['Amazon','Flipkart'])
     df_keys = df_keys.to_html(escape = False)
     st.write(df_keys, unsafe_allow_html=True)
-
