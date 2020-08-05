@@ -33,7 +33,7 @@ def scrape(url,str):
     }
 
     # Download the page using requests
-    print("Downloading %s"%url)
+    st.write('Downloading')
     r = requests.get(url, headers=headers)
     # Simple check to check if page was blocked (Usually 503)
     if r.status_code > 500:
@@ -44,7 +44,7 @@ def scrape(url,str):
         return None
     # Pass the HTML of the page and create
     if str == 'amazon':
-         print("Extracting")
+          st.write("Extracting")
          return amazon_ext.extract(r.text)
     if str == 'flipkart':
          ret = e.extract(r.text)
