@@ -84,7 +84,7 @@ if key:
         #print(data)
             #print(json2html.convert(json = data))
         #f = open('helloworld.html','w',encoding='utf-8')
-        f.write(json2html.convert(json = data))
+        #f.write(json2html.convert(json = data))
             #df = pd.DataFrame.from_dict(data)
         df = pd.json_normalize(data['Products'])
         df = df.iloc[:10]
