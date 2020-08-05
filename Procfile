@@ -1,1 +1,1 @@
-worker:sh setup.sh && streamlit run amazon.py
+web:sh setup.sh && streamlit run amazon.py
