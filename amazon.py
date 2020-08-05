@@ -78,34 +78,18 @@ if key:
     #amazon_df
     
     if data['Products'] is not None:
-            #json.dump(data,outfile)
-            #outfile.write("\n")s
-            #infoFromJson = json.loads(data)
-        #print(data)
-            #print(json2html.convert(json = data))
-        #f = open('helloworld.html','w',encoding='utf-8')
-        #f.write(json2html.convert(json = data))
-            #df = pd.DataFrame.from_dict(data)
+
         df = pd.json_normalize(data['Products'])
         df = df.iloc[:10]
         amazonlink = "https://www.amazon.in"
         df['url'] = amazonlink+df['url'].astype(str)
         df['url'] = df['url'].apply(make_clickable)
-        #df = df.to_html(escape=False)
 
-            #df.style.set_properties(subset=['url'], **{'width': '300px'})
-        #st.subheader('Amazon rates')
-        #st.write(amazon_df, unsafe_allow_html=True)
-            #df['url'] = df['url'].str.cat(10)
-            #st.table(df)
-        f.close()
 
     fdata = scrape(flipkat_url,'flipkart')
     fp_df = pd.DataFrame()
     if fdata['Products'] is not None:
-                #f.write(json2html.convert(json = data))
-        #print(fdata)
-                #df = pd.DataFrame.from_dict(data)
+
         fp_df = pd.json_normalize(fdata['Products'])
         fp_df = fp_df.iloc[:10]
         #fp_df = fp_df.iloc[:10]
@@ -120,10 +104,4 @@ if key:
     df_keys = pd.concat([df,fp_df], keys=['Amazon','Flipkart'])
     df_keys = df_keys.to_html(escape = False)
     st.write(df_keys, unsafe_allow_html=True)
-                #st.table(data)
 
-                #print ("%s"%json2html.convert(json = infoFromJson))            # sleep(5)
-                # if data:
-                #     with open('output.jsonl','w') as outfile:
-                #         infoFromJson = json.loads(outfile)
-                #         json2html.convert(json = infoFromJson)
