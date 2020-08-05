@@ -44,7 +44,7 @@ def scrape(url,str):
         return None
     # Pass the HTML of the page and create
     if str == 'amazon':
-          st.write("Extracting")
+         st.write("Extracting")
          return amazon_ext.extract(r.text)
     if str == 'flipkart':
          ret = e.extract(r.text)
