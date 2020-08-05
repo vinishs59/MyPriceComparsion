@@ -1,6 +1,6 @@
-selectorlib
-requests
-streamlit==0.49.0
-pandas
-streamlit_theme
-json2html
+selectorlib==0.16.0
+requests==2.24.0
+streamlit==0.64.0
+pandas==1.1.0
+streamlit_theme==0.58.0
+json2html==1.3.0
