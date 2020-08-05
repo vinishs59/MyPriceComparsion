@@ -1,6 +1,6 @@
 selectorlib
 requests
-streamlit == 0.49.0
+streamlit==0.49.0
 pandas
 streamlit_theme
 json2html
