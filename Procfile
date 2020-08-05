@@ -1,1 +1,2 @@
-web: sh setup.sh && streamlit run amazon.py
+web: streamlit run --server.enableCORS false --server.port $PORT  --server.headless true amazon.py
+
