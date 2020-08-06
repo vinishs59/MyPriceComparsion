@@ -43,7 +43,7 @@ def scrape(url,str):
         return None
     # Pass the HTML of the page and create
     if str == 'amazon':
-        #st.subheader('Amazon available Price')
+        #st.subheader('Flipkart available Price')
         return amazon_ext.extract(r.text)
     if str == 'flipkart':
         ret = e.extract(r.text)
@@ -53,13 +53,19 @@ def scrape(url,str):
             ext =Extractor.from_yaml_file('flipkartNew.yml')
             return ext.extract(r.text)
 
-
-st.sidebar.header('Price to compare')
+#st.sidebar(fixed=True)
+st.header('Price to compare')
 key = ""
-key = st.sidebar.text_input('Enter the product')
-st.write('the selected product is', key)
+key = st.text_input('Enter the product')
+words = key.split()
+search =""
+for i in words:
+    search = search + i + '+'
+search = search[:-1]
+print (search)
+#st.sidebar.markdown('the selected product is', key)
 
-select_url = st.sidebar.selectbox("Choose your preference: ",['Amazon','Flipkart'])
+select_url = st.selectbox("Choose your preference: ",['Amazon','Flipkart'])
 
 def make_clickable(link):
         # target _blank to open new window
@@ -67,14 +73,14 @@ def make_clickable(link):
     text = link.split('=')[1]
     return f'<a target="_blank" href="{link}">{text}</a>'
 
-if key:
+if search:
     #fp_df = pd.DataFrame()
     df = pd.DataFrame()
     if select_url == 'Amazon':
-        #st.subheader('Amazon available Price')
-        amazon_url= 'https://www.amazon.in/s?k='+str(key)
+        st.subheader('Amazon available Price')
+        amazon_url= 'https://www.amazon.in/s?k='+str(search)
         data = scrape(amazon_url,'amazon')
-        print(data)
+        #print(amazon_url)
         #amazon_df
         if data['Products'] is not None:
             df = pd.json_normalize(data['Products'])
@@ -84,7 +90,8 @@ if key:
             df['url'] = df['url'].apply(make_clickable)
 
     if select_url == 'Flipkart':
-        flipkat_url = 'https://www.flipkart.com/search?q='+ str(key)
+        st.subheader('Flipkart available Price')
+        flipkat_url = 'https://www.flipkart.com/search?q='+ str(search)
         fdata = scrape(flipkat_url,'flipkart')
 
         if fdata['Products'] is not None:
@@ -95,7 +102,7 @@ if key:
             df['url'] = link+df['url'].astype(str)
             df['url'] = df['url'].apply(make_clickable)
 
-    st.subheader('Latest available Price')
+    #st.subheader('Latest available Price')
     #frames= [df,fp_df]
     #df_keys = pd.concat([df,fp_df], keys=['Amazon','Flipkart'])
     df = df.to_html(escape = False)
